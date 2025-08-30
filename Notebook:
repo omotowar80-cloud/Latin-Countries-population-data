@@ -1,0 +1,23 @@
+population-api/
+│
+├── data/                # raw Excel files (ignored in git)
+│
+├── output/              # cleaned datasets, reports, exports (ignored in git)
+│
+├── scripts/             # API + data processing scripts
+│   ├── population_api.py
+│   └── data_processing.py
+│
+├── notebooks/           # Jupyter notebooks for EDA, testing, visualization
+│   ├── 01_data_cleaning.ipynb
+│   ├── 02_population_analysis.ipynb
+│   └── 03_api_demo.ipynb
+│
+├── requirements.txt     # or environment.yml
+├── .gitignore
+└── README.md
+
+.gitinore:/
+
+# --- Notebooks ---
+.notebooks_checkpoints/
