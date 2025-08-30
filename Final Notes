@@ -1,0 +1,6 @@
+
+### **Final Notes**:
+- Save the Excel files (i.e., `Population-Latin-and-Caribbean-Countries-2010-2019 (2).xlsx` and `Copy of data.xlsx`) inside the `data/` directory.
+- Ensure that your Python environment has the required libraries installed using `pip install -r requirements.txt`.
+
+This structure will allow you to organize your code better and keep everything modular. Let me know if you need any further changes or assistance!
