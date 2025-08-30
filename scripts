@@ -1,0 +1,189 @@
+population-api/
+│
+├── data/
+│   ├── Population-Latin-and-Caribbean-Countries-2010-2019 (2).xlsx
+│   └── Copy of data.xlsx
+│
+├── scripts/
+│   ├── population_api.py
+│   └── data_processing.py
+│
+├── requirements.txt
+└── README.md
+
+population_api.py (Flask API)
+
+from flask import Flask, jsonify
+import pandas as pd
+from data_processing import load_and_clean_data
+
+app = Flask(__name__)
+
+# Load and clean the population data
+population_data_dict = load_and_clean_data()
+
+# Route to get population for a specific country
+@app.route('/api/population/<country_name>', methods=['GET'])
+def get_population_by_country(country_name):
+    country_name = country_name.title()  # Ensure case-insensitivity
+    if country_name in population_data_dict:
+        return jsonify({
+            'country': country_name,
+            'population': population_data_dict[country_name]
+        })
+    else:
+        return jsonify({'error': 'Country not found'}), 404 
+
+# Route to get population data for all countries
+@app.route('/api/population/latin-american-countries', methods=['GET'])
+def get_population_all():
+    countries = [
+        {
+            'name': country,
+            'population': population_data_dict[country]
+        }
+        for country in population_data_dict
+    ]
+    return jsonify({'countries': countries})
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+import pandas as pd
+
+# File paths
+file_path1 = 'data/Population-Latin-and-Caribbean-Countries-2010-2019 (2).xlsx'
+file_path2 = 'data/Copy of data.xlsx'
+
+def clean_data(data):
+    """
+    Cleans the data by selecting relevant columns and removing rows with missing values.
+    """
+    return data[['Country Name', '2010 [YR2010]', '2011 [YR2011]', '2012 [YR2012]', '2013 [YR2013]',
+                 '2014 [YR2014]', '2015 [YR2015]', '2016 [YR2016]', '2017 [YR2017]', '2018 [YR2018]',
+                 '2019 [YR2019]']].dropna(subset=['2010 [YR2010]'])
+
+def load_and_clean_data():
+    """
+    Loads and combines population data from two files, then cleans and returns it as a dictionary.
+    """
+    # Load the data from both files
+    data1 = pd.read_excel(file_path1, sheet_name='Data')
+    data2 = pd.read_excel(file_path2, sheet_name='Data')
+
+    # Clean both datasets
+    data1_cleaned = clean_data(data1)
+    data2_cleaned = clean_data(data2)
+
+    # Combine the data from both files and remove duplicates
+    combined_data = pd.concat([data1_cleaned, data2_cleaned], ignore_index=True).drop_duplicates(subset='Country Name')
+
+    # Convert the cleaned data into a dictionary format
+    population_data_dict = combined_data.set_index('Country Name').T.to_dict('dict')
+    
+    return population_data_dict
+
+requirements.txt
+
+Flask==2.2.2
+pandas==1.5.3
+
+README.md
+
+# Latin American Population API
+
+This API provides population data for Latin American and Caribbean countries from 2010 to 2019. The data is sourced from two Excel files.
+
+## API Endpoints
+
+### 1. Get Population for a Specific Country
+
+**Endpoint:** `GET /api/population/{country_name}`
+
+**Example:**
+```bash
+curl http://127.0.0.1:5000/api/population/Argentina
+
+Response:
+
+{
+  "country": "Argentina",
+  "population": {
+    "2010": 40788453,
+    "2011": 41261490,
+    "2012": 41733271,
+    "2013": 42202935,
+    "2014": 42669500,
+    "2015": 43131966,
+    "2016": 43590368,
+    "2017": 44044811,
+    "2018": 44494502,
+    "2019": 44938712
+  }
+}
+
+ET /api/population/latin-american-countries
+
+Example:
+curl http://127.0.0.1:5000/api/population/latin-american-countries
+
+Response:
+{
+  "countries": [
+    {
+      "name": "Argentina",
+      "population": {
+        "2010": 40788453,
+        "2011": 41261490,
+        "2012": 41733271,
+        "2013": 42202935,
+        "2014": 42669500,
+        "2015": 43131966,
+        "2016": 43590368,
+        "2017": 44044811,
+        "2018": 44494502,
+        "2019": 44938712
+      }
+    },
+    {
+      "name": "Brazil",
+      "population": {
+        "2010": 211049527,
+        "2011": 213993437,
+        "2012": 216686926,
+        "2013": 219289872,
+        "2014": 221607480,
+        "2015": 223348673,
+        "2016": 225214318,
+        "2017": 227022505,
+        "2018": 229205732,
+        "2019": 231557494
+      }
+    }
+  ]
+}
+
+Clone this repository or download the files.
+
+Install dependencies:
+
+pip install -r requirements.txt
+
+
+Run the Flask API:
+
+python scripts/population_api.py
+
+
+The API will be accessible at http://127.0.0.1:5000/.
+
+License
+
+This project is licensed under the MIT License.
+
+
+### **Final Notes**:
+- Save the Excel files (i.e., `Population-Latin-and-Caribbean-Countries-2010-2019 (2).xlsx` and `Copy of data.xlsx`) inside the `data/` directory.
+- Ensure that your Python environment has the required libraries installed using `pip install -r requirements.txt`.
+
+This structure will allow you to organize your code better and keep everything modular. Let me know if you need any further changes or assistance!
