@@ -1,0 +1,38 @@
+Possible Analyses on Latin America & Caribbean Population Data (2010–2019)
+1. Population Growth by Country
+
+Calculate absolute growth: 2019 population – 2010 population
+
+Calculate growth rate: (2019 / 2010 – 1) × 100
+
+➡️ Example output:
+
+Country	2010	2019	Growth (%)
+Brazil	195M	211M	+8.1%
+Mexico	114M	126M	+10.5%
+Haiti	9.9M	11.1M	+12.1%
+2. Top 5 Most Populous Countries (2019)
+
+Rank countries by 2019 population
+➡️ Brazil, Mexico, Colombia, Argentina, Peru usually dominate.
+
+3. Regional Growth Trends
+
+Compare South America vs Central America vs Caribbean
+
+Aggregate total population for each region per year → visualize trend lines.
+
+4. Urbanization vs Population (if extra data available)
+
+If you later add urban % data → analyze if urban countries grow differently.
+
+5. Visualizations
+
+📈 Line plots: population trend (2010–2019) for selected countries.
+
+📊 Bar chart: total growth by country (2010–2019).
+
+🌍 Map (optional if we bring in geodata): visualize population sizes.
+
+⚡ Question for you:
+Do you want me to (A) run the analysis now and generate charts + summary here, or (B) prepare a starter Jupyter Notebook (02_population_analysis.ipynb) so you can interactively explore it yourself?
