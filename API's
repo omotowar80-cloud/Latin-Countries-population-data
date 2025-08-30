@@ -1,0 +1,105 @@
+Install Flask and Pandas: If you haven't already installed these libraries, you can do so using pip.
+
+pip install Flask pandas
+Here's the code to create the API using Flask. It will expose two main endpoints:
+
+/api/population/{country_name}: Returns the population of a specific country for each year.
+
+/api/population/latin-american-countries: 
+
+from flask import Flask, jsonify
+import pandas as pd
+
+app = Flask(__name__)
+
+# Load and clean the combined data (merge data from both files as done earlier)
+file_path1 = 'Population-Latin-and-Caribbean-Countries-2010-2019 (2).xlsx'
+file_path2 = 'Copy of data.xlsx'
+
+# Load data from both files
+data1 = pd.read_excel(file_path1, sheet_name='Data')
+data2 = pd.read_excel(file_path2, sheet_name='Data')
+
+# Clean both datasets
+def clean_data(data):
+    return data[['Country Name', '2010 [YR2010]', '2011 [YR2011]', '2012 [YR2012]', '2013 [YR2013]', 
+                 '2014 [YR2014]', '2015 [YR2015]', '2016 [YR2016]', '2017 [YR2017]', '2018 [YR2018]', 
+                 '2019 [YR2019]']].dropna(subset=['2010 [YR2010]'])
+
+data1_cleaned = clean_data(data1)
+data2_cleaned = clean_data(data2)
+
+# Combine the data from both files
+combined_data = pd.concat([data1_cleaned, data2_cleaned], ignore_index=True).drop_duplicates(subset='Country Name')
+
+# Convert data to a dictionary format for easier access
+population_data_dict = combined_data.set_index('Country Name').T.to_dict('dict')
+
+# Route to get population for a specific country
+@app.route('/api/population/<country_name>', methods=['GET'])
+def get_population_by_country(country_name):
+    country_name = country_name.title()  # Ensure case-insensitivity
+    if country_name in population_data_dict:
+        return jsonify({
+            'country': country_name,
+            'population': population_data_dict[country_name]
+        })
+    else:
+        return jsonify({'error': 'Country not found'}), 404
+
+# Route to get population data for all countries
+@app.route('/api/population/latin-american-countries', methods=['GET'])
+def get_population_all():
+    countries = [
+        {
+            'name': country,
+            'population': population_data_dict[country]
+        }
+        for country in population_data_dict
+    ]
+    return jsonify({'countries': countries})
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+Flask Setup:
+
+We create a Flask app with two main routes:
+
+/api/population/<country_name>: This route fetches the population data for a specific country.
+
+/api/population/latin-american-countries: This route fetches the population data for all countries in the dataset.
+
+Data Loading & Cleaning:
+
+Both datasets are loaded using pandas.read_excel(), and the clean_data() function is used to extract the relevant columns (country name and population for each year).
+
+The data from both files is merged using pd.concat(), and duplicates are removed based on the country name.
+
+Data Conversion to Dictionary:
+
+The cleaned data is converted into a dictionary using set_index() and T.to_dict('dict'). This allows easy access to population data by country name.
+
+API Routes:
+
+The first route, /api/population/<country_name>, checks if the country exists in the dictionary and returns the population data for the specified country.
+
+The second route, /api/population/latin-american-countries, returns the population data for all countries in the dataset.
+
+Running the API:
+
+Save the code in a file, for example, population_api.py.
+
+Run the file using the command:
+
+python population_api.py
+
+The API will be available at http://127.0.0.1:5000/.
+
+To get the population data for Argentina, use:
+
+GET http://127.0.0.1:5000/api/population/Argentina
+
+To get the population data for all countries, use:
+
+GET http://127.0.0.1:5000/api/population/latin-american-countries
