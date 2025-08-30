@@ -1,0 +1,9 @@
+With this setup:
+
+Your raw Excel data (data/*.xlsx) won’t be committed.
+
+Your generated exports (output/*.json) are ignored (unless you want them tracked — then remove that line).
+
+Keeps your repo clean from virtual envs, cache files, and IDE settings.
+
+👉 Do you want me to set it up so that only scripts (like scripts/) and configs (requirements.txt, environment.yml) are tracked, while data + outputs are always ignored?
