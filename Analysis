@@ -33,6 +33,3 @@ If you later add urban % data → analyze if urban countries grow differently.
 📊 Bar chart: total growth by country (2010–2019).
 
 🌍 Map (optional if we bring in geodata): visualize population sizes.
-
-⚡ Question for you:
-Do you want me to (A) run the analysis now and generate charts + summary here, or (B) prepare a starter Jupyter Notebook (02_population_analysis.ipynb) so you can interactively explore it yourself?
