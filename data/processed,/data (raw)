@@ -1,0 +1,31 @@
+population-api/
+│
+├── data/
+│   ├── raw/                # untouched input files
+│   │   ├── Population-Latin-and-Caribbean-Countries-2010-2019.xlsx
+│   │   └── Copy of data.xlsx
+│   │
+│   └── processed/          # cleaned & standardized datasets
+│       └── population_latin_caribbean_2010_2019.csv
+│
+├── output/                 # exports for reports / APIs
+│   └── population_latin_caribbean_2010_2019.json
+│
+├── scripts/                # Python scripts
+│
+├── notebooks/              # analysis & exploration
+│
+├── requirements.txt
+├── environment.yml
+├── .gitignore
+└── README.md
+
+  gitignore
+
+  # --- Data ---
+data/raw/*.xlsx       # raw files, large → don’t track
+data/processed/*.csv  # optional: ignore if auto-generated
+
+data/raw/*.xlsx → data/processed/population_cleaned.csv → output/population_api.json
+
+?
